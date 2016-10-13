@@ -18,7 +18,8 @@
                 outerDotRadius:     '@',
                 innerStrokeWidth:   '@',
                 outerStrokeWidth:   '@',
-                progressAngle:      '@'
+                innerProgressAngle: '@',
+                outerProgressAngle: '@'
             },
             compile: function (element, attr) {
                 return function (scope, element, attr) {
@@ -42,33 +43,34 @@
                         return ['M', start.x, start.y, 'A', radius, radius, 0, arcSweep, 0, end.x, end.y].join(' ');
                     };
 
-                    scope.width             = scope.width               || ((($window.innerWidth < $window.innerHeight) ? $window.innerWidth : $window.innerHeight) / 2);
-                    scope.circleColor       = scope.circleColor         || '#2a2a2a';
-                    scope.arcColor          = scope.arcColor            || '#1bbccb';
-                    scope.dotColor          = scope.dotColor            || '#e9fafc';
-                    scope.innerRadius       = scope.innerRadius         || ((scope.width / 2) - 50);
-                    scope.outerRadius       = scope.outerRadius         || ((scope.width / 2) - 40);
-                    scope.innerDotRadius    = scope.innerDotRadius      || 3;
-                    scope.outerDotRadius    = scope.outerDotRadius      || 5;
-                    scope.innerStrokeWidth  = scope.innerStrokeWidth    || 3;
-                    scope.outerStrokeWidth  = scope.outerStrokeWidth    || 6;
-                    scope.progressAngle     = scope.progressAngle       || 0;
+                    scope.width                 = scope.width               || ((($window.innerWidth < $window.innerHeight) ? $window.innerWidth : $window.innerHeight) / 2);
+                    scope.circleColor           = scope.circleColor         || '#2a2a2a';
+                    scope.arcColor              = scope.arcColor            || '#1bbccb';
+                    scope.dotColor              = scope.dotColor            || '#e9fafc';
+                    scope.innerRadius           = scope.innerRadius         || ((scope.width / 2) - 50);
+                    scope.outerRadius           = scope.outerRadius         || ((scope.width / 2) - 30);
+                    scope.innerDotRadius        = scope.innerDotRadius      || 8;
+                    scope.outerDotRadius        = scope.outerDotRadius      || 5;
+                    scope.innerStrokeWidth      = scope.innerStrokeWidth    || 6;
+                    scope.outerStrokeWidth      = scope.outerStrokeWidth    || 3;
+                    scope.innerProgressAngle    = scope.innerProgressAngle  || 0;
+                    scope.outerProgressAngle    = scope.outerProgressAngle  || 0;
 
                     scope.width_2   = scope.width/2;
 
-                    var positionHour    = polarToCartesian(scope.width_2, scope.width_2, scope.innerRadius, scope.progressAngle);
-                    var positionMinute  = polarToCartesian(scope.width_2, scope.width_2, scope.outerRadius, scope.progressAngle);
+                    var innerPosition   = polarToCartesian(scope.width_2, scope.width_2, scope.innerRadius, scope.innerProgressAngle);
+                    var outerPosition   = polarToCartesian(scope.width_2, scope.width_2, scope.outerRadius, scope.outerProgressAngle);
 
-                    scope.hourArcPath   = describeArc(scope.width_2, scope.width_2, scope.innerRadius, 0, scope.progressAngle);
-                    scope.minuteArcPath = describeArc(scope.width_2, scope.width_2, scope.outerRadius, 0, scope.progressAngle);
+                    scope.innerArcPath  = describeArc(scope.width_2, scope.width_2, scope.innerRadius, 0, scope.innerProgressAngle);
+                    scope.outerArcPath  = describeArc(scope.width_2, scope.width_2, scope.outerRadius, 0, scope.outerProgressAngle);
 
-                    scope.hourDotPath   = describeArc(scope.width_2, scope.width_2, scope.innerRadius, scope.progressAngle - 3, scope.progressAngle);
-                    scope.hourDotX      = positionHour.x;
-                    scope.hourDotY      = positionHour.y;
+                    scope.innerDotPath  = describeArc(scope.width_2, scope.width_2, scope.innerRadius, scope.innerProgressAngle - 3, scope.innerProgressAngle);
+                    scope.innerDotX     = innerPosition.x;
+                    scope.innerDotY     = innerPosition.y;
 
-                    scope.minuteDotPath = describeArc(scope.width_2, scope.width_2, scope.outerRadius, scope.progressAngle - 1, scope.progressAngle);
-                    scope.minuteDotX    = positionMinute.x;
-                    scope.minuteDotY    = positionMinute.y;
+                    scope.outerDotPath  = describeArc(scope.width_2, scope.width_2, scope.outerRadius, scope.outerProgressAngle - 1, scope.outerProgressAngle);
+                    scope.outerDotX     = outerPosition.x;
+                    scope.outerDotY     = outerPosition.y;
                 };
             },
             template:
@@ -96,11 +98,11 @@
                     '</defs>' +
                     '<ellipse ng-attr-cx="{{ width_2 }}" ng-attr-cy="{{ width_2 }}" ng-attr-rx="{{ width_2 }}" ng-attr-ry="{{ width_2 }}" fill="url(#backHoleBelowClock)"/>' +
                     '<circle stroke-width="{{ innerStrokeWidth }}" fill="none" ng-attr-cx="{{ width_2 }}" ng-attr-cy="{{ width_2 }}" ng-attr-stroke="{{ circleColor }}" ng-attr-r="{{ innerRadius }}" />' +
-                    '<path stroke-width="{{ innerStrokeWidth }}" fill="none" stroke-linecap="round" ng-attr-stroke="{{ arcColor }}" ng-attr-d="{{ hourArcPath }}" filter="url(#glow)" />' +
-                    '<circle ng-attr-cx="{{ hourDotX }}" ng-attr-cy="{{ hourDotY }}" ng-attr-r="{{ innerDotRadius }}" ng-attr-fill="{{ dotColor }}" ng-attr-d="{{ hourDotPath }}" filter="url(#glow)" />' +
+                    '<path stroke-width="{{ innerStrokeWidth }}" fill="none" stroke-linecap="round" ng-attr-stroke="{{ arcColor }}" ng-attr-d="{{ innerArcPath }}" filter="url(#glow)" />' +
+                    '<circle ng-attr-cx="{{ innerDotX }}" ng-attr-cy="{{ innerDotY }}" ng-attr-r="{{ innerDotRadius }}" ng-attr-fill="{{ dotColor }}" ng-attr-d="{{ innerDotPath }}" filter="url(#glow)" />' +
                     '<circle stroke-width="{{ outerStrokeWidth }}" fill="none" ng-attr-cx="{{ width_2 }}" ng-attr-cy="{{ width_2 }}" ng-attr-stroke="{{ circleColor }}" ng-attr-r="{{ outerRadius }}" />' +
-                    '<path stroke-width="{{ outerStrokeWidth }}" fill="none" stroke-linecap="round" ng-attr-stroke="{{ arcColor }}" ng-attr-d="{{ minuteArcPath }}" filter="url(#glow)" />' +
-                    '<circle ng-attr-cx="{{ minuteDotX }}" ng-attr-cy="{{ minuteDotY }}" ng-attr-r="{{ outerDotRadius }}" ng-attr-fill="{{ dotColor }}" ng-attr-d="{{ minuteDotPath }}" filter="url(#glow)" />' +
+                    '<path stroke-width="{{ outerStrokeWidth }}" fill="none" stroke-linecap="round" ng-attr-stroke="{{ arcColor }}" ng-attr-d="{{ outerArcPath }}" filter="url(#glow)" />' +
+                    '<circle ng-attr-cx="{{ outerDotX }}" ng-attr-cy="{{ outerDotY }}" ng-attr-r="{{ outerDotRadius }}" ng-attr-fill="{{ dotColor }}" ng-attr-d="{{ outerDotPath }}" filter="url(#glow)" />' +
                 '</svg>'
         };
     }]);
