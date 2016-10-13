@@ -1,0 +1,30 @@
+{
+  "name": "angular-double-arc-glow",
+  "version": "1.0.0",
+  "authors": [
+    "Olivier Le Quellec <olivier.le-quellec@live.fr>"
+  ],
+  "description": "AngularJS directive for displaying a double circular progress arc with glow",
+  "main": "angular-double-arc-glow.js",
+  "keywords": [
+    "angularjs",
+    "directive",
+    "progress",
+    "svg",
+    "glow"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/OreOreDa/angular-double-arc-glow.git",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "example",
+    "bower.json",
+    "package.json",
+    "Gruntfile.js"
+  ],
+  "dependencies": {
+    "angular": ">=1.2.19"
+  }
+}
